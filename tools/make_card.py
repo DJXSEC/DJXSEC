@@ -9,7 +9,9 @@ from xml.sax.saxutils import escape
 
 from PIL import Image, ImageOps, ImageEnhance
 
-COLS, ROWS = 46, 23          # ASCII art size (chars are ~2x taller than wide)
+COLS, ROWS = 72, 36          # ASCII art size (chars are ~2x taller than wide)
+ART_FONT = 8                 # px, art uses a smaller font for more detail
+ACW, ALH = ART_FONT * 0.602, ART_FONT * 1.25
 FONT = 13                    # px
 CW, LH = FONT * 0.602, FONT * 1.25   # monospace char width, line height
 RAMP = " .:-=+*#%@"          # light to dense
@@ -41,46 +43,71 @@ THEMES = {
 SWATCH = ["#f85149", "#d29922", "#3fb950", "#58a6ff", "#bc8cff", "#39c5cf", "#8b949e", "#f0f6fc"]
 
 
-def ascii_lines(img_path, invert):
-    img = Image.open(img_path).convert("L")
-    img = ImageOps.exif_transpose(img) or img
-    s = min(img.size)                                  # center square crop
-    img = img.crop(((img.width - s) // 2, (img.height - s) // 2,
-                    (img.width + s) // 2, (img.height + s) // 2))
-    img = ImageOps.autocontrast(img, cutoff=2)
-    img = ImageEnhance.Contrast(img).enhance(1.3)
-    img = img.resize((COLS, ROWS), Image.LANCZOS)
-    px = list(img.tobytes())
-    out = []
+CROP = (162, 170, 862, 870)   # (left, top, right, bottom) in source pixels; frames the figure and server aisle
+
+
+def ascii_cells(img_path, invert):
+    """Return rows of (char, hex color) built from the image."""
+    img = ImageOps.exif_transpose(Image.open(img_path)).convert("RGB")
+    if CROP:
+        img = img.crop(CROP)
+    else:
+        s = min(img.size)
+        img = img.crop(((img.width - s) // 2, (img.height - s) // 2,
+                        (img.width + s) // 2, (img.height + s) // 2))
+    img = ImageEnhance.Color(img).enhance(1.4)
+    small = img.resize((COLS, ROWS), Image.LANCZOS)
+    gray = ImageOps.equalize(small.convert("L"))
+    g, rgb = gray.tobytes(), small.tobytes()
+    rows = []
     for r in range(ROWS):
-        row = ""
+        row = []
         for c in range(COLS):
-            v = px[r * COLS + c] / 255
-            if invert:
-                v = 1 - v
-            row += RAMP[min(int(v * len(RAMP)), len(RAMP) - 1)]
-        out.append(row.rstrip())
-    return out
+            i = r * COLS + c
+            v = 1 - g[i] / 255          # darker pixel = denser char, so the figure reads solid
+            ch = RAMP[min(int(v * len(RAMP)), len(RAMP) - 1)]
+            R, G, B = rgb[i * 3:i * 3 + 3]
+            if invert:   # light theme: darken so colors read on white
+                R, G, B = int(R * .55), int(G * .55), int(B * .55)
+            else:        # dark theme: lift so dim pixels still show
+                m = max(R, G, B) or 1
+                k = max(1.0, 170 / m)
+                R, G, B = min(255, int(R * k)), min(255, int(G * k)), min(255, int(B * k))
+            q = lambda x: (x // 32) * 32 + 16          # quantize for fewer tspans
+            row.append((ch, "#%02x%02x%02x" % (q(R), q(G), q(B))))
+        rows.append(row)
+    return rows
 
 
 def build(img_path, theme):
     t = THEMES[theme]
-    art = ascii_lines(img_path, t["invert"])
+    art = ascii_cells(img_path, t["invert"])
     pad = 28
-    art_w = COLS * CW
+    art_w = COLS * ACW
     info_x = pad + art_w + 36
     width = int(info_x + 46 * CW + pad)
-    height = int(pad * 2 + ROWS * LH)
-    info_y0 = pad + (ROWS * LH - len(INFO) * LH * 1.15) / 2 + FONT
+    height = int(pad * 2 + max(ROWS * ALH, len(INFO) * LH * 1.15))
+    info_y0 = (height - len(INFO) * LH * 1.15) / 2 + FONT
 
     p = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
          f'viewBox="0 0 {width} {height}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" '
          f'font-size="{FONT}">',
          f'<rect x="0.5" y="0.5" width="{width-1}" height="{height-1}" rx="10" fill="{t["bg"]}" stroke="{t["border"]}"/>',
-         f'<text x="{pad}" y="{pad + FONT}" fill="{t["art"]}" xml:space="preserve">']
-    for i, line in enumerate(art):
-        p.append(f'<tspan x="{pad}" dy="{0 if i == 0 else LH:.2f}">{escape(line) or " "}</tspan>')
-    p.append("</text>")
+         ]
+    for i, row in enumerate(art):
+        runs, cur, buf = [], None, ""
+        for ch, col in row:
+            col = None if ch == " " else col
+            if col != cur and buf.strip():
+                runs.append((cur, buf)); buf = ""
+            if ch != " ":
+                cur = col
+            buf += ch
+        if buf.strip():
+            runs.append((cur, buf))
+        spans = "".join(f'<tspan fill="{c or t["art"]}">{escape(s)}</tspan>' for c, s in runs)
+        art_y0 = (height - ROWS * ALH) / 2 + ART_FONT
+        p.append(f'<text x="{pad}" y="{art_y0 + i * ALH:.2f}" font-size="{ART_FONT}" xml:space="preserve">{spans}</text>')
 
     y = info_y0
     for kind, val in INFO:
