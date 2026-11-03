@@ -27,7 +27,7 @@ INFO = [
     ("Focus", "Cybersecurity, Cloud Security"),
     ("Certs", "CompTIA A+ | Security+ (in progress)"),
     ("Tools", "Burp Suite, n8n, VMware"),
-    ("Learning", "Java, plus Python and Bash basics"),
+    ("Learning", "Python and Java basics"),
     ("Location", "Denton, Texas"),
     ("Motto", "Let's build, let's learn, let's secure"),
     ("blank", ""),

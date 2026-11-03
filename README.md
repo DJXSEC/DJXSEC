@@ -19,7 +19,7 @@ I'm a Business Computer Information Systems senior at the University of North Te
 - 📚 Studying for **CompTIA Security+**
 - 🧪 Building out my Proxmox homelab
 - 🎯 Practicing web app security with Burp Suite
-- ☕ Learning Java
+- ☕ Learning Python and Java
 
 ### Tools
 
