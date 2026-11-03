@@ -36,24 +36,23 @@
 <text x="28" y="366.00" font-size="8" xml:space="preserve"><tspan fill="#595d67">%#*%%%*++++====++=----::::....:#</tspan><tspan fill="#ffffff">###%</tspan><tspan fill="#595d67">++</tspan><tspan fill="#ffffff">#%%%</tspan><tspan fill="#595d67">#.:::::.=##*=*+=====++++%%%*#%</tspan></text>
 <text x="28" y="376.00" font-size="8" xml:space="preserve"><tspan fill="#595d67">*%@%******+++++**====----:::::+#</tspan><tspan fill="#ffffff">%#%</tspan><tspan fill="#595d67">%-#</tspan><tspan fill="#ffffff">#%%</tspan><tspan fill="#595d67">@%:::------===*+=+++++*****%@%*</tspan></text>
 <text x="28" y="386.00" font-size="8" xml:space="preserve"><tspan fill="#595d67">@%#*####******+*#++====------=@</tspan><tspan fill="#ffffff">%%#%</tspan><tspan fill="#595d67">#:%@@@%%*---====++++**++******###*#%@</tspan></text>
-<text x="410.752" y="80.8" fill="#ffffff" font-weight="bold">donovan@djxsec</text>
-<text x="410.752" y="99.5" fill="#3a4658">--------------</text>
-<text x="410.752" y="118.2" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">OS:</tspan><tspan fill="#9aa7b8"> Kali Linux / Proxmox VE homelab</tspan></text>
-<text x="410.752" y="136.9" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Host:</tspan><tspan fill="#9aa7b8"> University of North Texas</tspan></text>
-<text x="410.752" y="155.6" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Major:</tspan><tspan fill="#9aa7b8"> BCIS, Class of 2027</tspan></text>
-<text x="410.752" y="174.3" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Focus:</tspan><tspan fill="#9aa7b8"> Cybersecurity, Cloud Security</tspan></text>
-<text x="410.752" y="193.0" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Certs:</tspan><tspan fill="#9aa7b8"> CompTIA A+ | Security+ (in progress)</tspan></text>
-<text x="410.752" y="211.7" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Tools:</tspan><tspan fill="#9aa7b8"> Burp Suite, Python, n8n, VirtualBox</tspan></text>
-<text x="410.752" y="230.3" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Langs:</tspan><tspan fill="#9aa7b8"> Python, Bash, SQL</tspan></text>
-<text x="410.752" y="249.0" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Location:</tspan><tspan fill="#9aa7b8"> Dallas Fort Worth, TX</tspan></text>
-<text x="410.752" y="267.7" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Motto:</tspan><tspan fill="#9aa7b8"> Let's build, let's learn, let's secure</tspan></text>
-<text x="410.752" y="305.1" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Contact:</tspan><tspan fill="#9aa7b8"> LINKEDIN_PLACEHOLDER</tspan></text>
-<rect x="410.8" y="331.5" width="23.5" height="15" fill="#1a2230"/>
-<rect x="434.2" y="331.5" width="23.5" height="15" fill="#2b3546"/>
-<rect x="457.7" y="331.5" width="23.5" height="15" fill="#3f4a5c"/>
-<rect x="481.2" y="331.5" width="23.5" height="15" fill="#5a6577"/>
-<rect x="504.7" y="331.5" width="23.5" height="15" fill="#7d8796"/>
-<rect x="528.1" y="331.5" width="23.5" height="15" fill="#a5adb9"/>
-<rect x="551.6" y="331.5" width="23.5" height="15" fill="#d0d5dc"/>
-<rect x="575.1" y="331.5" width="23.5" height="15" fill="#ffffff"/>
+<text x="410.752" y="99.5" fill="#ffffff" font-weight="bold">donovan@djxsec</text>
+<text x="410.752" y="118.2" fill="#3a4658">--------------</text>
+<text x="410.752" y="136.9" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">OS:</tspan><tspan fill="#9aa7b8"> Kali Linux / Proxmox VE homelab</tspan></text>
+<text x="410.752" y="155.6" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Host:</tspan><tspan fill="#9aa7b8"> University of North Texas</tspan></text>
+<text x="410.752" y="174.3" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Major:</tspan><tspan fill="#9aa7b8"> BCIS, Class of 2027</tspan></text>
+<text x="410.752" y="193.0" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Focus:</tspan><tspan fill="#9aa7b8"> Cybersecurity, Cloud Security</tspan></text>
+<text x="410.752" y="211.7" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Certs:</tspan><tspan fill="#9aa7b8"> CompTIA A+ | Security+ (in progress)</tspan></text>
+<text x="410.752" y="230.3" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Tools:</tspan><tspan fill="#9aa7b8"> Burp Suite, Python, n8n, VirtualBox</tspan></text>
+<text x="410.752" y="249.0" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Langs:</tspan><tspan fill="#9aa7b8"> Python, Bash, SQL</tspan></text>
+<text x="410.752" y="267.7" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Location:</tspan><tspan fill="#9aa7b8"> Dallas Fort Worth, TX</tspan></text>
+<text x="410.752" y="286.4" xml:space="preserve"><tspan fill="#ffffff" font-weight="bold">Motto:</tspan><tspan fill="#9aa7b8"> Let's build, let's learn, let's secure</tspan></text>
+<rect x="410.8" y="312.8" width="23.5" height="15" fill="#1a2230"/>
+<rect x="434.2" y="312.8" width="23.5" height="15" fill="#2b3546"/>
+<rect x="457.7" y="312.8" width="23.5" height="15" fill="#3f4a5c"/>
+<rect x="481.2" y="312.8" width="23.5" height="15" fill="#5a6577"/>
+<rect x="504.7" y="312.8" width="23.5" height="15" fill="#7d8796"/>
+<rect x="528.1" y="312.8" width="23.5" height="15" fill="#a5adb9"/>
+<rect x="551.6" y="312.8" width="23.5" height="15" fill="#d0d5dc"/>
+<rect x="575.1" y="312.8" width="23.5" height="15" fill="#ffffff"/>
 </svg>

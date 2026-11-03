@@ -31,8 +31,6 @@ INFO = [
     ("Location", "Dallas Fort Worth, TX"),
     ("Motto", "Let's build, let's learn, let's secure"),
     ("blank", ""),
-    ("Contact", "LINKEDIN_PLACEHOLDER"),
-    ("blank", ""),
     ("swatch", ""),
 ]
 
