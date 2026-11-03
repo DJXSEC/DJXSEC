@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+import colorsys
+
 from PIL import Image, ImageOps, ImageEnhance
 
 COLS, ROWS = 72, 36          # ASCII art size (chars are ~2x taller than wide)
@@ -35,15 +37,45 @@ INFO = [
 ]
 
 THEMES = {
-    "dark": dict(bg="#0d1117", border="#30363d", art="#c9d1d9", key="#58a6ff",
-                 val="#c9d1d9", title="#3fb950", dim="#8b949e", invert=False),
-    "light": dict(bg="#ffffff", border="#d0d7de", art="#24292f", key="#0969da",
-                  val="#24292f", title="#1a7f37", dim="#57606a", invert=True),
+    "dark": dict(bg="#0b1220", border="#22324a", art="#c9d1d9", key="#9be7ff",
+                 val="#c9d1d9", title="#ffffff", dim="#4b6587", invert=False),
+    "light": dict(bg="#ffffff", border="#d0d7de", art="#24292f", key="#0a3069",
+                  val="#24292f", title="#0a3069", dim="#8c959f", invert=True),
 }
-SWATCH = ["#f85149", "#d29922", "#3fb950", "#58a6ff", "#bc8cff", "#39c5cf", "#8b949e", "#f0f6fc"]
+SWATCH = ["#14233a", "#1f3a5a", "#2d4a6b", "#3f6d9a", "#5aa3d6", "#9be7ff", "#cdf3ff", "#ffffff"]
 
 
 CROP = (162, 170, 862, 870)   # (left, top, right, bottom) in source pixels; frames the figure and server aisle
+
+
+def _hex(h):
+    return tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))
+
+
+def _mix(a, b, t):
+    a, b = _hex(a), _hex(b)
+    return tuple(int(a[k] + (b[k] - a[k]) * t) for k in range(3))
+
+
+def _is_figure(rgb):
+    h, s, val = colorsys.rgb_to_hsv(*(x / 255 for x in rgb))
+    return 0.68 <= h <= 0.93 and s > 0.28
+
+
+# Each palette: (density 0..1, source rgb, row position 0..1) -> rgb for the dark theme
+PALETTES = {
+    "matrix":    lambda v, c, y: _mix("#0b3d1a", "#7CFF9B", v),
+    "highlight": lambda v, c, y: _mix("#9b6bff", "#ff7ad9", v) if _is_figure(c) else _mix("#1f2a37", "#4b5a6e", v),
+    "synthwave": lambda v, c, y: _mix(*(("#ff4fd8", "#ffd1f5") if _is_figure(c) else ("#1b6f8a", "#39c5cf")), v),
+    "amber":     lambda v, c, y: _mix("#3d2600", "#ffb347", v),
+    "gradient":  lambda v, c, y: _mix("#39c5cf", "#bc8cff", y) if v > 0.35 else _mix("#1f2a37", "#2f3b4c", v),
+    "ice":       lambda v, c, y: _mix("#9be7ff", "#ffffff", v) if _is_figure(c) else _mix("#14233a", "#2d4a6b", v),
+}
+# Light-theme versions (dark ink on white); palettes without one are darkened automatically
+PALETTES_LIGHT = {
+    "ice": lambda v, c, y: _mix("#0a3069", "#010409", v) if _is_figure(c) else _mix("#d8e1ea", "#9fb3c8", v),
+}
+PALETTE = "ice"
 
 
 def ascii_cells(img_path, invert):
@@ -67,9 +99,15 @@ def ascii_cells(img_path, invert):
             v = 1 - g[i] / 255          # darker pixel = denser char, so the figure reads solid
             ch = RAMP[min(int(v * len(RAMP)), len(RAMP) - 1)]
             R, G, B = rgb[i * 3:i * 3 + 3]
-            if invert:   # light theme: darken so colors read on white
+            own_light = invert and PALETTE in PALETTES_LIGHT
+            if PALETTE != "source":
+                fn = PALETTES_LIGHT[PALETTE] if own_light else PALETTES[PALETTE]
+                R, G, B = fn(v, (R, G, B), r / (ROWS - 1))
+            if own_light:
+                pass
+            elif invert:   # light theme: darken so colors read on white
                 R, G, B = int(R * .55), int(G * .55), int(B * .55)
-            else:        # dark theme: lift so dim pixels still show
+            elif PALETTE == "source":   # dark theme: lift so dim pixels still show
                 m = max(R, G, B) or 1
                 k = max(1.0, 170 / m)
                 R, G, B = min(255, int(R * k)), min(255, int(G * k)), min(255, int(B * k))
