@@ -37,12 +37,12 @@ INFO = [
 ]
 
 THEMES = {
-    "dark": dict(bg="#0b1220", border="#22324a", art="#c9d1d9", key="#9be7ff",
-                 val="#c9d1d9", title="#ffffff", dim="#4b6587", invert=False),
+    "dark": dict(bg="#0b1220", border="#22324a", art="#c9d1d9", key="#ffffff",
+                 val="#9aa7b8", title="#ffffff", dim="#3a4658", invert=False),
     "light": dict(bg="#ffffff", border="#d0d7de", art="#24292f", key="#0a3069",
                   val="#24292f", title="#0a3069", dim="#8c959f", invert=True),
 }
-SWATCH = ["#14233a", "#1f3a5a", "#2d4a6b", "#3f6d9a", "#5aa3d6", "#9be7ff", "#cdf3ff", "#ffffff"]
+SWATCH = ["#1a2230", "#2b3546", "#3f4a5c", "#5a6577", "#7d8796", "#a5adb9", "#d0d5dc", "#ffffff"]
 
 
 CROP = (162, 170, 862, 870)   # (left, top, right, bottom) in source pixels; frames the figure and server aisle
@@ -75,7 +75,32 @@ PALETTES = {
 PALETTES_LIGHT = {
     "ice": lambda v, c, y: _mix("#0a3069", "#010409", v) if _is_figure(c) else _mix("#d8e1ea", "#9fb3c8", v),
 }
-PALETTE = "ice"
+PALETTE = "mono"
+MONO = {"dark": ("#ffffff", "#0b1220"), "light": ("#0a3069", "#ffffff")}   # (ink, card bg)
+MONO_BG_STRENGTH = 0.32       # how visible the server aisle is behind the figure
+
+
+def figure_mask(img_small):
+    """Largest connected blob of purple pixels = the hooded figure."""
+    from collections import deque
+    W, H = img_small.size
+    b = img_small.tobytes()
+    M = [[_is_figure(tuple(b[(r * W + c) * 3:(r * W + c) * 3 + 3])) for c in range(W)] for r in range(H)]
+    seen, best = set(), []
+    for r in range(H):
+        for c in range(W):
+            if M[r][c] and (r, c) not in seen:
+                comp, q = [], deque([(r, c)]); seen.add((r, c))
+                while q:
+                    y, x = q.popleft(); comp.append((y, x))
+                    for dy in (-1, 0, 1):
+                        for dx in (-1, 0, 1):
+                            ny, nx = y + dy, x + dx
+                            if 0 <= ny < H and 0 <= nx < W and M[ny][nx] and (ny, nx) not in seen:
+                                seen.add((ny, nx)); q.append((ny, nx))
+                if len(comp) > len(best):
+                    best = comp
+    return set(best)
 
 
 def ascii_cells(img_path, invert):
@@ -91,6 +116,12 @@ def ascii_cells(img_path, invert):
     small = img.resize((COLS, ROWS), Image.LANCZOS)
     gray = ImageOps.equalize(small.convert("L"))
     g, rgb = gray.tobytes(), small.tobytes()
+    if PALETTE == "mono":
+        ink, bg = MONO["light" if invert else "dark"]
+        keep = figure_mask(small)
+        dim = "#%02x%02x%02x" % _mix(bg, ink, MONO_BG_STRENGTH)
+        return [[(RAMP[min(int((1 - g[r * COLS + c] / 255) * len(RAMP)), len(RAMP) - 1)],
+                  ink if (r, c) in keep else dim) for c in range(COLS)] for r in range(ROWS)]
     rows = []
     for r in range(ROWS):
         row = []
