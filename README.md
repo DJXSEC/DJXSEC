@@ -12,6 +12,7 @@ I'm a Business Computer Information Systems senior at the University of North Te
 
 | Project | What it is |
 |---------|-----------|
+| [Proxmox Homelab](https://github.com/DJXSEC/Proxmox-Homelab) | My self hosted Proxmox VE lab: hardware, network design, zero open port remote access with Tailscale, and lessons learned |
 | [Linux Installation Notes](https://github.com/DJXSEC/Linux-Installation-Notes) | Documented build of my Kali Linux security lab VM: setup, hardening, networking, troubleshooting |
 
 ### Currently
